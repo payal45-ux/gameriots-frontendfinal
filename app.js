@@ -635,67 +635,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderVideos();
 
 
-  // --- AIM CALIBRATION HUB LOGIC ---
-  const calcGameSelect = document.getElementById("calc-game-select");
-  const calcDpiRange = document.getElementById("calc-dpi-range");
-  const calcDpiValue = document.getElementById("calc-dpi-value");
-  const calcSensInput = document.getElementById("calc-sens-input");
-  const btnRecalibrate = document.getElementById("btn-recalibrate");
-
-  const resEdpi = document.getElementById("res-edpi");
-  const resDistance = document.getElementById("res-distance");
-  const resRecommendation = document.getElementById("res-recommendation");
-
-  const convVal = document.getElementById("conv-val");
-  const convCs2 = document.getElementById("conv-cs2");
-  const convApex = document.getElementById("conv-apex");
-  const convOw2 = document.getElementById("conv-ow2");
-
-  const YAW_FACTORS = {
-    val: 0.07,
-    cs2: 0.022,
-    apex: 0.022,
-    ow2: 0.0066
-  };
-
-  function updateCalibration() {
-    if (!calcGameSelect || !calcDpiRange || !calcSensInput) return;
-
-    const game = calcGameSelect.value;
-    const dpi = parseInt(calcDpiRange.value);
-    const sens = parseFloat(calcSensInput.value) || 0.1;
-    const yaw = YAW_FACTORS[game];
-
-    // Update DPI text label
-    if (calcDpiValue) calcDpiValue.textContent = `${dpi} DPI`;
-
-    // 1. Calculate eDPI
-    const edpi = Math.round(dpi * sens);
-    if (resEdpi) resEdpi.textContent = edpi;
-
-    // 2. Calculate physical cm/360 distance
-    // cm/360 = (360 * 2.54) / (DPI * sens * yaw) = 914.4 / (DPI * sens * yaw)
-    const distance = 914.4 / (dpi * sens * yaw);
-    if (resDistance) resDistance.textContent = `${distance.toFixed(1)} cm`;
-
-    // 3. Converted Sensitivities for other games
-    const baseValSens = game === "val" ? sens : sens * (yaw / YAW_FACTORS.val);
-    if (convVal) convVal.textContent = baseValSens.toFixed(3);
-    if (convCs2) convCs2.textContent = (baseValSens * (YAW_FACTORS.val / YAW_FACTORS.cs2)).toFixed(3);
-    if (convApex) convApex.textContent = (baseValSens * (YAW_FACTORS.val / YAW_FACTORS.apex)).toFixed(3);
-    if (convOw2) convOw2.textContent = (baseValSens * (YAW_FACTORS.val / YAW_FACTORS.ow2)).toFixed(3);
-
-    // 4. AI Recommendation
-    let recommendation = "";
-    if (distance < 20) {
-      recommendation = "Your sensitivity is extremely high (wrist aiming). This provides fast 180° turns but makes micro-adjustments difficult. We suggest lowering sens towards 30-40 cm/360 for better tracking.";
-    } else if (distance > 50) {
-      recommendation = "Your sensitivity is very low (arm aiming). This offers excellent precision but requires large physical mouse swipes. Make sure you have a wide mousepad and plenty of desk space.";
-    } else {
-      recommendation = "Your sensitivity is in the optimal balanced range (balanced arm/wrist aiming). This matches the telemetry profiles of over 85% of competitive FPS professionals.";
-    }
-    if (resRecommendation) resRecommendation.textContent = recommendation;
-  }
+  
 
   // Bind Listeners
   if (calcGameSelect) calcGameSelect.addEventListener("change", updateCalibration);
