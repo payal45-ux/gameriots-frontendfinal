@@ -6,6 +6,8 @@
   <title>GameRiots | AI-Powered Gaming Intelligence Platform & Coaching Engine</title>
   <meta name="description" content="Meet Riot, the ChatGPT for gamers. GameRiots provides real-time strategy recommendations, custom sensitivity optimization, esports news, and AI-powered performance coaching.">
   <link rel="stylesheet" href="style.css">
+  <!-- Google Identity Services SDK (needed for "Sign in with Google") -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -20,429 +22,445 @@
       <li><a href="#riot-ai">AI Coach</a></li>
       <li><a href="#features">Features</a></li>
       <li><a href="#youtube-hub">Media Hub</a></li>
-      
     </ul>
-    <div class="nav-actions">
+    <div class="nav-actions" id="nav-actions-guest">
       <button class="btn btn-secondary btn-sm" id="btn-login-open">Sign In</button>
       <button class="btn btn-primary btn-sm" id="btn-signup-open">Get Started</button>
     </div>
+    <div class="nav-actions user-profile-nav" id="nav-actions-user" style="display:none; position:relative;">
+      <button class="user-profile-trigger" id="btn-profile-toggle">
+        <div class="user-avatar-circle" id="user-avatar-initial">U</div>
+        <span id="user-profile-name">Player</span>
+        <i data-lucide="chevron-down"></i>
+      </button>
+      <div class="user-profile-dropdown" id="user-profile-dropdown">
+        <div class="dropdown-item" id="btn-logout">
+          <i data-lucide="log-out"></i> Logout
+        </div>
+      </div>
+    </div>
   </header>
 
-  <!-- Spline 3D Model overlapping container (Floats naturally behind and beside hero/chat sections) -->
+  <!-- Spline 3D Model overlapping container (Floats naturally behind and beside hero/chat sections, zoomed in to hide watermark) -->
   <div class="spline-outer-container" id="spline-container">
     <div class="spline-inner-wrapper">
-      <iframe src="https://my.spline.design/genkubgreetingrobot-C5p1ij180JOEop5aQXdyW3QL/" frameborder="0" width="100%" height="100%"></iframe>
-    </div>
-  </div>
-
-  <!-- Hero Section -->
-  <section class="hero" id="hero">
-    <div class="hero-grid">
-      <div class="hero-content">
-        <div class="badge">
-          <span class="badge-dot"></span>
-          Riot AI Engine Active
-        </div>
-        <h1 class="hero-headline text-gradient">
-          Your AI Coach.<br>Sharper Aim.<br>Smarter Strategy.
-        </h1>
-        <p class="hero-subheadline">
-          Riot AI studies your playstyle and gives you instant sensitivity calibration, tactical setups, and strategy guidance — built for players who want to improve fast.
-        </p>
-        <div class="hero-actions">
-          <a href="#riot-ai" class="btn btn-primary">
-            <i data-lucide="message-square"></i>
-            Consult Riot AI
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Riot AI Assistant (Advanced Chat Section) -->
-  <section class="ai-section" id="riot-ai">
-    <div class="section-header">
-      <div class="badge">AI Gaming Coach</div>
-      <h2 class="section-title text-gradient">Consult Riot AI</h2>
-      <p class="section-subtitle">Calibrate sensitivity, plan strategy, or check pro settings. Receive immediate coaching responses tailored to your playstyle.</p>
-    </div>
-
-    <!-- Chat Container -->
-    <div class="chat-container glass-panel">
-      <!-- Sidebar: History + Topics -->
-      <div class="chat-sidebar">
-        <button class="btn-new-chat" id="btn-new-chat">
-          <i data-lucide="plus"></i> New Chat
-        </button>
-
-        <div class="chat-sidebar-tabs">
-          <button class="sidebar-tab active" data-panel="history">History</button>
-          <button class="sidebar-tab" data-panel="topics">Topics</button>
-        </div>
-
-        <!-- History Panel -->
-        <div class="sidebar-panel active" id="panel-history">
-          <div class="chat-history-list" id="chat-history-list">
-            <!-- Populated dynamically -->
-          </div>
-        </div>
-
-        <!-- Topics Panel -->
-        <div class="sidebar-panel" id="panel-topics">
-          <div class="chat-sidebar-title">Coaching Topics</div>
-          <div class="chat-category-list" id="chat-category-list">
-            <button class="chat-category active" data-category="sensitivity">
-              <i data-lucide="crosshair"></i>
-              <div>
-                <div class="cat-name">Sensitivity</div>
-                <div class="cat-desc">DPI & eDPI calibration</div>
-              </div>
-            </button>
-            <button class="chat-category" data-category="strategy">
-              <i data-lucide="swords"></i>
-              <div>
-                <div class="cat-name">Strategy</div>
-                <div class="cat-desc">Tactics & team comps</div>
-              </div>
-            </button>
-            <button class="chat-category" data-category="meta">
-              <i data-lucide="trending-up"></i>
-              <div>
-                <div class="cat-name">Meta & Patches</div>
-                <div class="cat-desc">Current patch shifts</div>
-              </div>
-            </button>
-            <button class="chat-category" data-category="settings">
-              <i data-lucide="sliders-horizontal"></i>
-              <div>
-                <div class="cat-name">Pro Settings</div>
-                <div class="cat-desc">Config references</div>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <div class="chat-disclaimer-box">
-          <i data-lucide="info"></i>
-          <span>Riot AI can make mistakes. Verify critical settings before competitive play.</span>
-        </div>
-      </div>
-
-      <!-- Chat Main Panel -->
-      <div class="chat-main">
-        <div class="chat-header">
-          <div class="chat-bot-info">
-            <div class="bot-avatar">
-              <i data-lucide="bot"></i>
-            </div>
-            <div>
-              <div class="bot-name">RIOT AI</div>
-              <div class="bot-status">
-                <span class="status-dot"></span> Active Gaming Coach
-              </div>
-            </div>
-          </div>
-          <div class="chat-actions">
-            <select class="voice-select" id="voice-select" title="AI voice">
-              <option value="">Default voice</option>
-            </select>
-            <button class="btn btn-secondary btn-sm" style="padding:0.4rem; width:32px; height:32px;" title="Toggle voice replies" id="btn-voice-toggle">
-              <i data-lucide="volume-2"></i>
-            </button>
-            <button class="btn btn-secondary btn-sm" style="padding:0.4rem; width:32px; height:32px;" title="Reset conversation" id="btn-chat-reset">
-              <i data-lucide="rotate-ccw"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Chat Conversation Messages -->
-        <div class="chat-messages-wrapper">
-          <div class="chat-messages" id="chat-messages-container">
-            <!-- Initial bot message will be populated dynamically -->
-          </div>
-          <button class="scroll-to-bottom-btn" id="btn-scroll-bottom" title="Scroll to latest">
-            <i data-lucide="arrow-down"></i>
-          </button>
-        </div>
-
-        <!-- Quick Suggestions Chips & Input Bar -->
-        <div class="chat-input-area">
-          <div class="quick-prompts" id="quick-prompts-container">
-            <button class="prompt-chip" data-query="Calculate optimal eDPI for 800 DPI and 0.35 Valorant sens.">Optimal Valorant eDPI</button>
-            <button class="prompt-chip" data-query="Provide a full eco tactic for CS2 Inferno B-site.">CS2 Inferno B Eco</button>
-            <button class="prompt-chip" data-query="Recommend custom Apex Legends settings for shroud's performance setup.">Shroud's Apex Setup</button>
-            <button class="prompt-chip" data-query="What is the current League of Legends counter play for Jinx?">Countering Jinx</button>
-          </div>
-          <form class="input-box-wrapper" id="chat-input-form">
-            <textarea class="chat-input" id="chat-user-input" placeholder="Query Riot AI about settings, strategies, or team comps... (Shift+Enter for new line)" rows="1" autocomplete="off"></textarea>
-            <div class="input-box-footer">
-              <button type="button" class="btn-mic" id="btn-mic" title="Speak your question">
-                <i data-lucide="mic"></i>
-              </button>
-              <span class="mic-status" id="mic-status">Listening...</span>
-              <div class="input-box-footer-right">
-                <span class="char-counter" id="char-counter">0 / 500</span>
-                <button type="submit" class="btn-send" id="btn-chat-send">
-                  <i data-lucide="send"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Bento Grid Features Section -->
-  <section class="features-section" id="features">
-    <div class="section-header">
-      <div class="badge">Gaming Engine</div>
-      <h2 class="section-title text-gradient">AI Performance Features</h2>
-      <p class="section-subtitle">Track accuracy stats, switch custom game profiles, and review professional gameplay settings.</p>
-    </div>
-
-    <div class="bento-grid">
-      <!-- Bento Card: Aim Index Score -->
-      <div class="bento-card glass-panel">
-        <div>
-          <div class="card-icon"><i data-lucide="bar-chart-2"></i></div>
-          <h3 class="card-title">Aim Index Score</h3>
-          <p class="card-desc">Accuracy statistics and aim index ratings compiled from recent matches.</p>
-        </div>
-        <div class="stats-panel-mini">
-          <div class="mini-stat">
-            <div class="mini-stat-label">Aim Index Score</div>
-            <div class="mini-stat-value">94.8%</div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-stat-label">Response Time</div>
-            <div class="mini-stat-value">142ms</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bento Card: Strategy Engine -->
-      <div class="bento-card glass-panel">
-        <div>
-          <div class="card-icon"><i data-lucide="target"></i></div>
-          <h3 class="card-title">Strategy Engine</h3>
-          <p class="card-desc">Lineup tutorials, maps analysis, and execution plans built for your team.</p>
-        </div>
-      </div>
-
-      <!-- Bento Card: Pro Insights -->
-      <div class="bento-card glass-panel">
-        <div>
-          <div class="card-icon"><i data-lucide="zap"></i></div>
-          <h3 class="card-title">Pro Insights</h3>
-          <p class="card-desc">Direct hardware settings and mouse sensitivity profiles parsed from pro esports players.</p>
-        </div>
-      </div>
-
-      <!-- Bento Card: Multi-Game Coverage -->
-      <div class="bento-card bento-card-double glass-panel">
-        <div class="game-profile-left">
-          <div class="card-icon"><i data-lucide="gamepad-2"></i></div>
-          <h3 class="card-title">Multi-Game Profiles</h3>
-          <p class="card-desc">Switch settings recommendations instantly matching your active game profile.</p>
-          <div class="game-selector-tabs">
-            <button class="game-tab active" data-game="val">Valorant</button>
-            <button class="game-tab" data-game="cs2">CS2</button>
-            <button class="game-tab" data-game="apex">Apex Legends</button>
-            <button class="game-tab" data-game="lol">LoL</button>
-          </div>
-        </div>
-        <div class="game-profile-right">
-          <div class="game-details-box" id="game-details-box">
-            <h4 id="game-name">Valorant Profile</h4>
-            <p id="game-stats">Precision recoil, agent guides, and meta strategies updated 10 minutes ago.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bento Card: Performance Analytics -->
-      <div class="bento-card glass-panel">
-        <div>
-          <div class="card-icon"><i data-lucide="line-chart"></i></div>
-          <h3 class="card-title">Analytics Tracker</h3>
-          <p class="card-desc">Real-time weapon statistics, kill-death metrics, and combat effectiveness ratings.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Esports Live Ticker -->
-  <section class="esports-ticker-section">
-    <div class="ticker-wrap">
-      <div class="ticker-content">
-        <div class="ticker-item">
-          <span class="ticker-badge">VALORANT</span>
-          <span class="ticker-status">VCT Champions: Sentinels vs Fnatic [2 - 1] - Live</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-badge">CS2</span>
-          <span class="ticker-status">PGL Major Copenhagen: FaZe vs Navi [1 - 2] - Final</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-badge">LOL</span>
-          <span class="ticker-status">LCK Spring: T1 vs Gen.G [3 - 2] - Completed</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-badge">APEX</span>
-          <span class="ticker-status">ALGS Split 1: DarkZero takes Matchpoint - Completed</span>
-        </div>
-        <!-- Duplicated items for endless loop -->
-        <div class="ticker-item">
-          <span class="ticker-badge">VALORANT</span>
-          <span class="ticker-status">VCT Champions: Sentinels vs Fnatic [2 - 1] - Live</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-badge">CS2</span>
-          <span class="ticker-status">PGL Major Copenhagen: FaZe vs Navi [1 - 2] - Final</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-badge">LOL</span>
-          <span class="ticker-status">LCK Spring: T1 vs Gen.G [3 - 2] - Completed</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-badge">APEX</span>
-          <span class="ticker-status">ALGS Split 1: DarkZero takes Matchpoint - Completed</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- YouTube Hub (AI-Curated Media Hub) -->
-  <section class="youtube-section" id="youtube-hub">
-    <div class="section-header">
-      <div class="badge">Curated Video Library</div>
-      <h2 class="section-title text-gradient">AI-Curated YouTube Hub</h2>
-      <p class="section-subtitle">Recommended training videos matching your game style. Watch sensitivity guides and gameplay analysis.</p>
-    </div>
-
-    <!-- Category selector tabs -->
-    <div class="hub-tabs">
-      <button class="hub-tab active" data-category="all">All Videos</button>
-      <button class="hub-tab" data-category="sensitivity">Sensitivity Guides</button>
-      <button class="hub-tab" data-category="analysis">Gameplay Analysis</button>
-      <button class="hub-tab" data-category="tutorials">Tutorials & Lineups</button>
-      <button class="hub-tab" data-category="patches">Patch Updates</button>
-    </div>
-
-    <!-- Video Grid -->
-    <div class="video-grid" id="video-grid">
-      <!-- Videos will be populated by JavaScript -->
-    </div>
-  </section>
-<!-- 
+      <iframe src="https://my.spline.design/genkubgreetingrobot-C5p1ij180JOEop5aQXdyW3QL/" frameborder="0" width="100%" height="100%"></iframe> 
+    </div> 
+  </div> 
  
-
-
-  <!-- Footer Section -->
-  <footer>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <h4>GAMERIOTS<span>.AI</span></h4>
-        <p>GameRiots is an AI-powered gaming assistant designed to help players improve their skills, settings, and strategies.</p>
-        <div class="footer-socials">
-          <a href="#" class="social-icon"><i data-lucide="twitter"></i></a>
-          <a href="#" class="social-icon"><i data-lucide="youtube"></i></a>
-          <a href="#" class="social-icon"><i data-lucide="github"></i></a>
-          <a href="#" class="social-icon"><i data-lucide="twitch"></i></a>
-        </div>
-      </div>
-      <div class="footer-links-col">
-        <h5>Platform</h5>
-        <ul>
-          <li><a href="#hero">Home</a></li>
-          <li><a href="#riot-ai">Riot AI Chat</a></li>
-          <li><a href="#features">AI Features</a></li>
-          <li><a href="#youtube-hub">YouTube Hub</a></li>
-          <li><a href="#calibration-hub">Aim Calibration</a></li>
-        </ul>
-      </div>
-      <div class="footer-links-col">
-        <h5>Resources</h5>
-        <ul>
-          <li><a href="#">Sensitivity Calculators</a></li>
-          <li><a href="#">Strategy Maps</a></li>
-          <li><a href="#">Pro Player Settings</a></li>
-        </ul>
-      </div>
-      <div class="footer-links-col">
-        <h5>Company</h5>
-        <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Terms & Privacy</a></li>
-          <li><a href="#">System Status</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div>&copy; 2026 GameRiots AI. Designed with absolute precision. All rights reserved.</div>
-      <div>Systems fully operational (Ping: 12ms)</div>
-    </div>
-  </footer>
-
-  <!-- Login Modal -->
-  <div class="modal-overlay" id="login-modal">
-    <div class="modal-window glass-panel">
-      <button class="modal-close" id="btn-login-close"><i data-lucide="x"></i></button>
-      <h3 class="modal-title">Sign In</h3>
-      <p class="modal-desc">Access your neural gaming log and personalized dashboard statistics.</p>
-      <form id="login-form">
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" required placeholder="name@domain.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-input" required placeholder="••••••••">
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" style="width: 100%;">Initiate Authentication</button>
-          <button type="button" class="btn btn-secondary" style="width: 100%;">
-            <i data-lucide="chrome"></i> Sign In with Google
-          </button>
-        </div>
-      </form>
-      <div class="auth-switch-link">
-        Don't have an account? <a href="#" id="link-switch-to-signup">Sign Up</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Signup Modal -->
-  <div class="modal-overlay" id="signup-modal">
-    <div class="modal-window glass-panel">
-      <button class="modal-close" id="btn-signup-close"><i data-lucide="x"></i></button>
-      <h3 class="modal-title">Create Account</h3>
-      <p class="modal-desc">Initialize your AI Gaming Profile and begin calibration.</p>
-      <form id="signup-form">
-        <div class="form-group">
-          <label class="form-label">Gamertag / Username</label>
-          <input type="text" class="form-input" required placeholder="e.g. Shroud">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" required placeholder="name@domain.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-input" required placeholder="Minimum 8 characters">
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" style="width: 100%;">Calibrate & Register</button>
-        </div>
-      </form>
-      <div class="auth-switch-link">
-        Already registered? <a href="#" id="link-switch-to-login">Sign In</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- CDN scripts -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="app.js"></script>
-</body>
-</html> -->
+  <!-- Hero Section --> 
+  <section class="hero" id="hero"> 
+    <div class="hero-grid"> 
+      <div class="hero-content"> 
+        <div class="badge"> 
+          <span class="badge-dot"></span> 
+          Riot AI Engine Active 
+        </div> 
+        <h1 class="hero-headline text-gradient"> 
+          Your AI Coach.<br>Sharper Aim.<br>Smarter Strategy. 
+        </h1> 
+        <p class="hero-subheadline"> 
+          Riot AI studies your playstyle and gives you instant sensitivity calibration, tactical setups, and strategy guidance — built for players who want to improve fast. 
+        </p> 
+        <div class="hero-actions"> 
+          <a href="#riot-ai" class="btn btn-primary"> 
+            <i data-lucide="message-square"></i> 
+            Consult Riot AI 
+          </a> 
+        </div> 
+      </div> 
+    </div> 
+  </section> 
+ 
+  <!-- Riot AI Assistant (Advanced Chat Section) --> 
+  <section class="ai-section" id="riot-ai"> 
+    <div class="section-header"> 
+      <div class="badge">AI Gaming Coach</div> 
+      <h2 class="section-title text-gradient">Consult Riot AI</h2> 
+      <p class="section-subtitle">Calibrate sensitivity, plan strategy, or check pro settings. Receive immediate coaching responses tailored to your playstyle.</p> 
+    </div> 
+ 
+    <!-- Chat Container --> 
+    <div class="chat-container glass-panel"> 
+      <!-- Sidebar: History + Topics --> 
+      <div class="chat-sidebar"> 
+        <button class="btn-new-chat" id="btn-new-chat"> 
+          <i data-lucide="plus"></i> New Chat 
+        </button> 
+ 
+        <div class="chat-sidebar-tabs"> 
+          <button class="sidebar-tab active" data-panel="history">History</button> 
+          <button class="sidebar-tab" data-panel="topics">Topics</button> 
+        </div> 
+ 
+        <!-- History Panel --> 
+        <div class="sidebar-panel active" id="panel-history"> 
+          <div class="chat-history-list" id="chat-history-list"> 
+            <!-- Populated dynamically --> 
+          </div> 
+        </div> 
+ 
+        <!-- Topics Panel --> 
+        <div class="sidebar-panel" id="panel-topics"> 
+          <div class="chat-sidebar-title">Coaching Topics</div> 
+          <div class="chat-category-list" id="chat-category-list"> 
+            <button class="chat-category active" data-category="sensitivity"> 
+              <i data-lucide="crosshair"></i> 
+              <div> 
+                <div class="cat-name">Sensitivity</div> 
+                <div class="cat-desc">DPI & eDPI calibration</div> 
+              </div> 
+            </button> 
+            <button class="chat-category" data-category="strategy"> 
+              <i data-lucide="swords"></i> 
+              <div> 
+                <div class="cat-name">Strategy</div> 
+                <div class="cat-desc">Tactics & team comps</div> 
+              </div> 
+            </button> 
+            <button class="chat-category" data-category="meta"> 
+              <i data-lucide="trending-up"></i> 
+              <div> 
+                <div class="cat-name">Meta & Patches</div> 
+                <div class="cat-desc">Current patch shifts</div> 
+              </div> 
+            </button> 
+            <button class="chat-category" data-category="settings"> 
+              <i data-lucide="sliders-horizontal"></i> 
+              <div> 
+                <div class="cat-name">Pro Settings</div> 
+                <div class="cat-desc">Config references</div> 
+              </div> 
+            </button> 
+          </div> 
+        </div> 
+ 
+        <div class="chat-disclaimer-box"> 
+          <i data-lucide="info"></i> 
+          <span>Riot AI can make mistakes. Verify critical settings before competitive play.</span> 
+        </div> 
+      </div> 
+ 
+      <!-- Chat Main Panel --> 
+      <div class="chat-main"> 
+        <div class="chat-header"> 
+          <div class="chat-bot-info"> 
+            <div class="bot-avatar"> 
+              <i data-lucide="bot"></i> 
+            </div> 
+            <div> 
+              <div class="bot-name">RIOT AI</div> 
+              <div class="bot-status"> 
+                <span class="status-dot"></span> Active Gaming Coach 
+              </div> 
+            </div> 
+          </div> 
+          <div class="chat-actions"> 
+            <select class="voice-select" id="voice-select" title="AI voice"> 
+              <option value="">Default voice</option> 
+            </select> 
+            <button class="btn btn-secondary btn-sm" style="padding:0.4rem; width:32px; height:32px;" title="Toggle voice replies" id="btn-voice-toggle"> 
+              <i data-lucide="volume-2"></i> 
+            </button> 
+            <button class="btn btn-secondary btn-sm" style="padding:0.4rem; width:32px; height:32px;" title="Reset conversation" id="btn-chat-reset"> 
+              <i data-lucide="rotate-ccw"></i> 
+            </button> 
+          </div> 
+        </div> 
+ 
+        <!-- Chat Conversation Messages --> 
+        <div class="chat-messages-wrapper"> 
+          <div class="chat-messages" id="chat-messages-container"> 
+            <!-- Initial bot message will be populated dynamically --> 
+          </div> 
+          <button class="scroll-to-bottom-btn" id="btn-scroll-bottom" title="Scroll to latest"> 
+            <i data-lucide="arrow-down"></i> 
+          </button> 
+        </div> 
+ 
+        <!-- Quick Suggestions Chips & Input Bar --> 
+        <div class="chat-input-area"> 
+          <div class="quick-prompts" id="quick-prompts-container"> 
+            <button class="prompt-chip" data-query="Calculate optimal eDPI for 800 DPI and 0.35 Valorant sens.">Optimal Valorant eDPI</button> 
+            <button class="prompt-chip" data-query="Provide a full eco tactic for CS2 Inferno B-site.">CS2 Inferno B Eco</button> 
+            <button class="prompt-chip" data-query="Recommend custom Apex Legends settings for shroud's performance setup.">Shroud's Apex Setup</button> 
+            <button class="prompt-chip" data-query="What is the current League of Legends counter play for Jinx?">Countering Jinx</button> 
+          </div> 
+          <form class="input-box-wrapper" id="chat-input-form"> 
+            <textarea class="chat-input" id="chat-user-input" placeholder="Query Riot AI about settings, strategies, or team comps... (Shift+Enter for new line)" rows="1" autocomplete="off"></textarea> 
+            <div class="input-box-footer"> 
+              <button type="button" class="btn-mic" id="btn-mic" title="Speak your question"> 
+                <i data-lucide="mic"></i> 
+              </button> 
+              <span class="mic-status" id="mic-status">Listening...</span> 
+              <div class="input-box-footer-right"> 
+                <span class="char-counter" id="char-counter">0 / 500</span> 
+                <button type="submit" class="btn-send" id="btn-chat-send"> 
+                  <i data-lucide="send"></i> 
+                </button> 
+              </div> 
+            </div> 
+          </form> 
+        </div> 
+      </div> 
+    </div> 
+  </section> 
+ 
+  <!-- Bento Grid Features Section --> 
+  <section class="features-section" id="features"> 
+    <div class="section-header"> 
+      <div class="badge">Gaming Engine</div> 
+      <h2 class="section-title text-gradient">AI Performance Features</h2> 
+      <p class="section-subtitle">Track accuracy stats, switch custom game profiles, and review professional gameplay settings.</p> 
+    </div> 
+ 
+    <div class="bento-grid"> 
+      <!-- Bento Card: Aim Index Score --> 
+      <div class="bento-card glass-panel"> 
+        <div> 
+          <div class="card-icon"><i data-lucide="bar-chart-2"></i></div> 
+          <h3 class="card-title">Aim Index Score</h3> 
+          <p class="card-desc">Accuracy statistics and aim index ratings compiled from recent matches.</p> 
+          <a href="features/aim-index-score" class="card-learn-more">Learn more <i data-lucide="arrow-right"></i></a> 
+        </div> 
+        <div class="stats-panel-mini"> 
+          <div class="mini-stat"> 
+            <div class="mini-stat-label">Aim Index Score</div> 
+            <div class="mini-stat-value">94.8%</div> 
+          </div> 
+          <div class="mini-stat"> 
+            <div class="mini-stat-label">Response Time</div> 
+            <div class="mini-stat-value">142ms</div> 
+          </div> 
+        </div> 
+      </div> 
+ 
+      <!-- Bento Card: Strategy Engine --> 
+      <div class="bento-card glass-panel"> 
+        <div> 
+          <div class="card-icon"><i data-lucide="target"></i></div> 
+          <h3 class="card-title">Strategy Engine</h3> 
+          <p class="card-desc">Lineup tutorials, maps analysis, and execution plans built for your team.</p> 
+          <a href="features/strategy-engine" class="card-learn-more">Learn more <i data-lucide="arrow-right"></i></a> 
+        </div> 
+      </div> 
+ 
+      <!-- Bento Card: Pro Insights --> 
+      <div class="bento-card glass-panel"> 
+        <div> 
+          <div class="card-icon"><i data-lucide="zap"></i></div> 
+          <h3 class="card-title">Pro Insights</h3> 
+          <p class="card-desc">Direct hardware settings and mouse sensitivity profiles parsed from pro esports players.</p> 
+          <a href="features/pro-insights" class="card-learn-more">Learn more <i data-lucide="arrow-right"></i></a> 
+        </div> 
+      </div> 
+ 
+      <!-- Bento Card: Multi-Game Coverage --> 
+      <div class="bento-card bento-card-double glass-panel"> 
+        <div class="game-profile-left"> 
+          <div class="card-icon"><i data-lucide="gamepad-2"></i></div> 
+          <h3 class="card-title">Multi-Game Profiles</h3> 
+          <p class="card-desc">Switch settings recommendations instantly matching your active game profile.</p> 
+          <a href="features/multi-game-profiles" class="card-learn-more">Learn more <i data-lucide="arrow-right"></i></a> 
+          <div class="game-selector-tabs"> 
+            <button class="game-tab active" data-game="val">Valorant</button> 
+            <button class="game-tab" data-game="cs2">CS2</button> 
+            <button class="game-tab" data-game="apex">Apex Legends</button> 
+            <button class="game-tab" data-game="lol">LoL</button> 
+          </div> 
+        </div> 
+        <div class="game-profile-right"> 
+          <div class="game-details-box" id="game-details-box"> 
+            <h4 id="game-name">Valorant Profile</h4> 
+            <p id="game-stats">Precision recoil, agent guides, and meta strategies updated 10 minutes ago.</p> 
+          </div> 
+        </div> 
+      </div> 
+ 
+      <!-- Bento Card: Performance Analytics --> 
+      <div class="bento-card glass-panel"> 
+        <div> 
+          <div class="card-icon"><i data-lucide="line-chart"></i></div> 
+          <h3 class="card-title">Analytics Tracker</h3> 
+          <p class="card-desc">Real-time weapon statistics, kill-death metrics, and combat effectiveness ratings.</p> 
+          <a href="features/analytics-tracker" class="card-learn-more">Learn more <i data-lucide="arrow-right"></i></a> 
+        </div> 
+      </div> 
+    </div> 
+  </section> 
+ 
+  <!-- Esports Live Ticker --> 
+  <section class="esports-ticker-section"> 
+    <div class="ticker-wrap"> 
+      <div class="ticker-content"> 
+        <div class="ticker-item"> 
+          <span class="ticker-badge">VALORANT</span> 
+          <span class="ticker-status">VCT Champions: Sentinels vs Fnatic [2 - 1] - Live</span> 
+        </div> 
+        <div class="ticker-item"> 
+          <span class="ticker-badge">CS2</span> 
+          <span class="ticker-status">PGL Major Copenhagen: FaZe vs Navi [1 - 2] - Final</span> 
+        </div> 
+        <div class="ticker-item"> 
+          <span class="ticker-badge">LOL</span> 
+          <span class="ticker-status">LCK Spring: T1 vs Gen.G [3 - 2] - Completed</span> 
+        </div> 
+        <div class="ticker-item"> 
+          <span class="ticker-badge">APEX</span> 
+          <span class="ticker-status">ALGS Split 1: DarkZero takes Matchpoint - Completed</span> 
+        </div> 
+        <!-- Duplicated items for endless loop --> 
+        <div class="ticker-item"> 
+          <span class="ticker-badge">VALORANT</span> 
+          <span class="ticker-status">VCT Champions: Sentinels vs Fnatic [2 - 1] - Live</span> 
+        </div> 
+        <div class="ticker-item"> 
+          <span class="ticker-badge">CS2</span> 
+          <span class="ticker-status">PGL Major Copenhagen: FaZe vs Navi [1 - 2] - Final</span> 
+        </div> 
+        <div class="ticker-item"> 
+          <span class="ticker-badge">LOL</span> 
+          <span class="ticker-status">LCK Spring: T1 vs Gen.G [3 - 2] - Completed</span> 
+        </div> 
+        <div class="ticker-item"> 
+          <span class="ticker-badge">APEX</span> 
+          <span class="ticker-status">ALGS Split 1: DarkZero takes Matchpoint - Completed</span> 
+        </div> 
+      </div> 
+    </div> 
+  </section> 
+ 
+  <!-- YouTube Hub (AI-Curated Media Hub) --> 
+  <section class="youtube-section" id="youtube-hub"> 
+    <div class="section-header"> 
+      <div class="badge">Curated Video Library</div> 
+      <h2 class="section-title text-gradient">AI-Curated YouTube Hub</h2> 
+      <p class="section-subtitle">Recommended training videos matching your game style. Watch sensitivity guides and gameplay analysis.</p> 
+    </div> 
+ 
+    <!-- Category selector tabs --> 
+    <div class="hub-tabs"> 
+      <button class="hub-tab active" data-category="all">All Videos</button> 
+      <button class="hub-tab" data-category="sensitivity">Sensitivity Guides</button> 
+      <button class="hub-tab" data-category="analysis">Gameplay Analysis</button> 
+      <button class="hub-tab" data-category="tutorials">Tutorials & Lineups</button> 
+      <button class="hub-tab" data-category="patches">Patch Updates</button> 
+    </div> 
+ 
+    <!-- Video Grid --> 
+    <div class="video-grid" id="video-grid"> 
+      <!-- Videos will be populated by JavaScript --> 
+    </div> 
+  </section> 
+ 
+  <!-- Footer Section --> 
+  <footer> 
+    <div class="footer-grid"> 
+      <div class="footer-brand"> 
+        <h4>GAMERIOTS<span>.AI</span></h4> 
+        <p>GameRiots is an AI-powered gaming assistant designed to help players improve their skills, settings, and strategies.</p> 
+        <div class="footer-socials"> 
+          <a href="#" class="social-icon"><i data-lucide="twitter"></i></a> 
+          <a href="#" class="social-icon"><i data-lucide="youtube"></i></a> 
+          <a href="#" class="social-icon"><i data-lucide="github"></i></a> 
+          <a href="#" class="social-icon"><i data-lucide="twitch"></i></a> 
+        </div> 
+      </div> 
+      <div class="footer-links-col"> 
+        <h5>Platform</h5> 
+        <ul> 
+          <li><a href="#hero">Home</a></li> 
+          <li><a href="#riot-ai">Riot AI Chat</a></li> 
+          <li><a href="#features">AI Features</a></li> 
+          <li><a href="#youtube-hub">YouTube Hub</a></li> 
+        </ul> 
+      </div> 
+      <div class="footer-links-col"> 
+        <h5>Resources</h5> 
+        <ul> 
+          <li><a href="#features">Strategy Maps</a></li> 
+          <li><a href="#features">Pro Player Settings</a></li> 
+        </ul> 
+      </div> 
+      <div class="footer-links-col"> 
+        <h5>Company</h5> 
+        <ul> 
+          <li><a href="#">About Us</a></li> 
+          <li><a href="#">Terms & Privacy</a></li> 
+          <li><a href="#">System Status</a></li> 
+        </ul> 
+      </div> 
+    </div> 
+    <div class="footer-bottom"> 
+      <div>&copy; 2026 GameRiots AI. Designed with absolute precision. All rights reserved.</div> 
+      <div>Systems fully operational (Ping: 12ms)</div> 
+    </div> 
+  </footer> 
+ 
+  <!-- Login Modal --> 
+  <div class="modal-overlay" id="login-modal"> 
+    <div class="modal-window glass-panel"> 
+      <button class="modal-close" id="btn-login-close"><i data-lucide="x"></i></button> 
+      <h3 class="modal-title">Sign In</h3> 
+      <p class="modal-desc">Access your neural gaming log and personalized dashboard statistics.</p> 
+      <form id="login-form"> 
+        <div class="form-group"> 
+          <label class="form-label">Email Address</label> 
+          <input type="email" id="login-email" class="form-input" required placeholder="name@domain.com"> 
+        </div> 
+        <div class="form-group"> 
+          <label class="form-label">Password</label> 
+          <input type="password" id="login-password" class="form-input" required placeholder="••••••••"> 
+        </div> 
+        <div class="form-actions"> 
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Initiate Authentication</button> 
+          <button type="button" class="btn btn-secondary" style="width: 100%;" id="btn-google-login"> 
+            <i data-lucide="chrome"></i> Sign In with Google 
+          </button> 
+          <div id="google-btn-container-login" style="display:none;"></div> 
+        </div> 
+      </form> 
+      <div class="auth-switch-link"> 
+        Don't have an account? <a href="#" id="link-switch-to-signup">Sign Up</a> 
+      </div> 
+    </div> 
+  </div> 
+ 
+  <!-- Signup Modal --> 
+  <div class="modal-overlay" id="signup-modal"> 
+    <div class="modal-window glass-panel"> 
+      <button class="modal-close" id="btn-signup-close"><i data-lucide="x"></i></button> 
+      <h3 class="modal-title">Create Account</h3> 
+      <p class="modal-desc">Initialize your AI Gaming Profile and begin calibration.</p> 
+      <form id="signup-form"> 
+        <div class="form-group"> 
+          <label class="form-label">Gamertag / Username</label> 
+          <input type="text" id="signup-username" class="form-input" required placeholder="e.g. Shroud"> 
+        </div> 
+        <div class="form-group"> 
+          <label class="form-label">Email Address</label> 
+          <input type="email" id="signup-email" class="form-input" required placeholder="name@domain.com"> 
+        </div> 
+        <div class="form-group"> 
+          <label class="form-label">Password</label> 
+          <input type="password" id="signup-password" class="form-input" required placeholder="Minimum 8 characters"> 
+        </div> 
+        <div class="form-actions"> 
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Calibrate & Register</button> 
+          <button type="button" class="btn btn-secondary" style="width: 100%;" id="btn-google-signup"> 
+            <i data-lucide="chrome"></i> Sign Up with Google 
+          </button> 
+          <div id="google-btn-container-signup" style="display:none;"></div> 
+        </div> 
+      </form> 
+      <div class="auth-switch-link"> 
+        Already registered? <a href="#" id="link-switch-to-login">Sign In</a> 
+      </div> 
+    </div> 
+  </div> 
+ 
+  <!-- CDN scripts --> 
+  <script src="lucide.min.js"></script> 
+  <script src="app.js"></script> 
+</body> 
+</html>
